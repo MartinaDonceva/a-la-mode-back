@@ -8,36 +8,31 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $products = Product::query()->paginate(5);
+
         return JsonResource::collection($products);
     }
 
-    public function store(Request $request) {
-        // logic for creating and validating the request
-        $fields = $request->validate([
-            'name' => 'required',
-            'price' => 'required',
-            'description' => 'required',
-            'image' => 'required'
-        ]);
-        Product::query()->create($fields);
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
+    {
+        Product::query()->create($request->validated());
+
         return redirect()->back();
     }
 
-    public function update(Product $product, Request $request){
-        $fields = $request->validate([
-            'name' => 'required',
-            'price' => 'required',
-            'description' => 'required',
-            'image' => 'required'
-        ]);
-        Product::query()->update($fields);
+    public function update(Product $product, Request $request): \Illuminate\Http\RedirectResponse
+    {
+        Product::query()->update($request->validated());
+
         return redirect()->back();
     }
 
-    public function destroy(Product $product){
+    public function destroy(Product $product)
+    {
         $product->delete();
+
         return redirect()->back();
     }
 }
